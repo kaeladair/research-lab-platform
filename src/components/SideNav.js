@@ -21,6 +21,10 @@ const SideNav = ({ isOpen, toggleDrawer }) => {
                     <ListItemText primary="Tasks" />
                 </ListItem>
                 <ListItem button onClick={toggleDrawer(false)}>
+                    <ListItemIcon><CheckBoxIcon /></ListItemIcon>
+                    <ListItemText primary="Schedule" />
+                </ListItem>
+                <ListItem button onClick={toggleDrawer(false)}>
                     <ListItemIcon><ArticleIcon /></ListItemIcon>
                     <ListItemText primary="Documentation" />
                 </ListItem>
