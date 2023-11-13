@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth"
 import { auth } from "../firebaseConfig"
-import { Button, Avatar } from '@mui/material';
+import { Button, Avatar, Box, Typography } from '@mui/material';
 
 export function SignIn() {
   return <Button variant="outlined" onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}>Sign In</Button>
@@ -11,15 +11,22 @@ export function SignOut() {
     const userInitial = auth.currentUser.displayName ? auth.currentUser.displayName.charAt(0) : '?';
 
     return (
-        <div>
-            <Avatar sx={{ bgcolor: 'primary.main', marginRight: 1 }}>
-                {auth.currentUser.photoURL ? <img src={auth.currentUser.photoURL} alt="" /> : userInitial}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar 
+                sx={{ bgcolor: 'primary.main', marginRight: 1 }}
+                src={auth.currentUser.photoURL} 
+                alt={userInitial}
+            >
+                {!auth.currentUser.photoURL && userInitial}
             </Avatar>
-            Hello, {auth.currentUser.displayName} &nbsp;
+            <Typography variant="body1" sx={{ marginRight: 1 }}>
+                Hello, {auth.currentUser.displayName}
+            </Typography>
             <Button variant="outlined" onClick={() => signOut(auth)}>Sign Out</Button>
-        </div>
+        </Box>
     );
 }
+
 
 
 export function useAuthentication() {
