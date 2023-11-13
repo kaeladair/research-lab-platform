@@ -20,7 +20,7 @@ export function SignOut() {
                 {!auth.currentUser.photoURL && userInitial}
             </Avatar>
             <Typography variant="body1" sx={{ marginRight: 1 }}>
-                Hello, {auth.currentUser.displayName}
+                {auth.currentUser.displayName}
             </Typography>
             <Button variant="outlined" onClick={() => signOut(auth)}>Sign Out</Button>
         </Box>
