@@ -11,24 +11,24 @@ const SideNav = ({ isOpen, toggleDrawer }) => {
         <Drawer
             anchor="left"
             open={isOpen}
-            onClose={toggleDrawer(false)}
+            onClose={() => toggleDrawer(false)}
             sx={{ width: drawerWidth, flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth } }}
         >
             <List>
                 {/* Replace these with your actual navigation items */}
-                <ListItem button onClick={toggleDrawer(false)}>
+                <ListItem button onClick={() => toggleDrawer(false)}>
                     <ListItemIcon><CheckBoxIcon /></ListItemIcon>
                     <ListItemText primary="Tasks" />
                 </ListItem>
-                <ListItem button onClick={toggleDrawer(false)}>
+                <ListItem button onClick={() => toggleDrawer(false)}>
                     <ListItemIcon><CheckBoxIcon /></ListItemIcon>
                     <ListItemText primary="Schedule" />
                 </ListItem>
-                <ListItem button onClick={toggleDrawer(false)}>
+                <ListItem button onClick={() => toggleDrawer(false)}>
                     <ListItemIcon><ArticleIcon /></ListItemIcon>
                     <ListItemText primary="Documentation" />
                 </ListItem>
-                <ListItem button onClick={toggleDrawer(false)}>
+                <ListItem button onClick={() => toggleDrawer(false)}>
                     <ListItemIcon><ChatIcon /></ListItemIcon>
                     <ListItemText primary="Chat" />
                 </ListItem>
@@ -38,5 +38,3 @@ const SideNav = ({ isOpen, toggleDrawer }) => {
 };
 
 export default SideNav;
-
-  

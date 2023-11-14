@@ -1,24 +1,16 @@
-import React, { useState } from 'react';
-import TopNav from './TopNav';
-import SideNav from './SideNav';
+import React from 'react';
+import PersistentDrawerLayout from './PersistentDrawerLayout';
+import { Typography } from '@mui/material';
 
-const App = () => {
-  const [sideNavOpen, setSideNavOpen] = useState(false);
-
-  const toggleDrawer = (open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    setSideNavOpen(open);
-  };
-
+function MyPage() {
   return (
-    <div>
-      <TopNav onMenuClick={() => setSideNavOpen(true)} />
-      <SideNav isOpen={sideNavOpen} toggleDrawer={toggleDrawer} />
-      {/* Your app content here */}
-    </div>
+    <PersistentDrawerLayout>
+      <Typography paragraph>
+        This is the main content of my page.
+      </Typography>
+      {/* More content can be added here */}
+    </PersistentDrawerLayout>
   );
-};
+}
 
-export default App;
+export default MyPage;
