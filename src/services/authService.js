@@ -1,32 +1,64 @@
 import { useState, useEffect } from "react"
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth"
 import { auth } from "../firebaseConfig"
-import { Button, Avatar, Box, Typography } from '@mui/material';
+import { Button, Avatar, Box, Typography, Tooltip, IconButton, Menu, MenuItem } from '@mui/material';
 
 export function SignIn() {
-  return <Button variant="outlined" onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}>Sign In</Button>
+  return (
+    <Button color="inherit" onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}>
+      Login
+    </Button>
+  );
 }
 
 export function SignOut() {
-    const userInitial = auth.currentUser.displayName ? auth.currentUser.displayName.charAt(0) : '?';
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const userInitial = auth.currentUser.displayName ? auth.currentUser.displayName.charAt(0) : '?';
+  const userPhoto = auth.currentUser.photoURL;
 
-    return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar 
-                sx={{ bgcolor: 'primary.main', marginRight: 1 }}
-                src={auth.currentUser.photoURL} 
-                alt={userInitial}
-            >
-                {!auth.currentUser.photoURL && userInitial}
-            </Avatar>
-            <Typography variant="body1" sx={{ marginRight: 1 }}>
-                {auth.currentUser.displayName}
-            </Typography>
-            <Button variant="outlined" onClick={() => signOut(auth)}>Sign Out</Button>
-        </Box>
-    );
+  const handleOpenUserMenu = (event) => {
+      setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+      setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+      signOut(auth);
+      handleCloseUserMenu();
+  };
+
+  return (
+      <Box sx={{ flexGrow: 0 }}>
+          <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={userInitial} src={userPhoto} />
+              </IconButton>
+          </Tooltip>
+          <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+          >
+              <MenuItem onClick={handleLogout}>
+                  <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
+          </Menu>
+      </Box>
+  );
 }
-
 
 
 export function useAuthentication() {
