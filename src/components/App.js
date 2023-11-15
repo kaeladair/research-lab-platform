@@ -1,13 +1,11 @@
 import React from 'react';
 import PersistentDrawerLayout from './PersistentDrawerLayout';
-import { Typography } from '@mui/material';
+import Chat from './Chat';
 
 function MyPage() {
   return (
     <PersistentDrawerLayout>
-      <Typography paragraph>
-        This is the main content of my page.
-      </Typography>
+      <Chat />
       {/* More content can be added here */}
     </PersistentDrawerLayout>
   );
