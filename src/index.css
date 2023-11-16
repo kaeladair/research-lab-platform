@@ -1,9 +1,15 @@
 body {
-  margin: 0;
   font-family: Roboto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+body, html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden; /* Prevent scrolling on the page */
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
