@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { format, isSameDay } from 'date-fns';
-import { Stack, TextField, Button, List, ListItem, Card, Typography, Avatar, Divider, Box, Fab, useTheme, useMediaQuery, Fade, CssBaseline } from '@mui/material';
+import { Stack, TextField, Button, List, ListItem, Card, Typography, Avatar, Divider, Box, Fab, useTheme, Fade, CssBaseline } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
