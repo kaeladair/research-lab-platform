@@ -50,9 +50,9 @@ function Chat() {
   };
 
   const handleScroll = (e) => {
-    const upperLimit = 100; // Adjust as needed
-    const scrolledUp = e.target.scrollTop < upperLimit;
-    setShowScrollButton(scrolledUp);
+    const bottomThreshold = 100; // Pixels from the bottom to show the button
+    const isAtBottom = e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight < bottomThreshold;
+    setShowScrollButton(!isAtBottom);
   };
 
   const scrollToBottom = () => {
@@ -76,7 +76,6 @@ function Chat() {
   };
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
@@ -117,14 +116,14 @@ function Chat() {
           <div ref={messagesEndRef} />
         </List>
         {showScrollButton && (
-          <Fade in={showScrollButton}>
-            <Box sx={{ position: 'fixed', bottom: theme.spacing(8), right: isMobile ? theme.spacing(2) : theme.spacing(3) }}>
-              <Fab color="primary" size="small" onClick={scrollToBottom}>
-                <ArrowDownwardIcon />
-              </Fab>
-            </Box>
-          </Fade>
-        )}
+            <Fade in={showScrollButton}>
+              <Box sx={{ position: 'absolute', bottom: theme.spacing(12), right: '50%', transform: 'translateX(50%)' }}>
+                <Fab color="primary" size="small" onClick={scrollToBottom}>
+                  <ArrowDownwardIcon />
+                </Fab>
+              </Box>
+            </Fade>
+          )}
         <Box component="form" onSubmit={sendMessage} sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
           <Stack direction="row" alignItems="center" spacing={1}>
             <TextField
