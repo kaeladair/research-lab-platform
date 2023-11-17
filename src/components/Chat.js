@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { format, isSameDay } from 'date-fns';
-import { Stack, TextField, IconButton, List, ListItem, Card, Typography, Avatar, Divider, Box, Fab, useTheme, useMediaQuery, Fade, CssBaseline } from '@mui/material';
+import { Stack, TextField, Button, List, ListItem, Card, Typography, Avatar, Divider, Box, Fab, useTheme, useMediaQuery, Fade, CssBaseline } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
@@ -134,9 +134,9 @@ function Chat() {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
             />
-            <IconButton color="primary" type="submit">
-              <SendIcon />
-            </IconButton>
+            <Button variant="contained" endIcon={ <SendIcon />} type="submit" sx={{ height: 55 }}>
+                SEND
+            </Button>
           </Stack>
         </Box>
       </Stack>
