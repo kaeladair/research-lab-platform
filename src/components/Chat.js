@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { format, isSameDay } from 'date-fns';
-import { Stack, TextField, IconButton, List, ListItem, Card, Typography, AppBar, Toolbar, Avatar, Divider, CssBaseline, Box } from '@mui/material';
+import { Stack, TextField, IconButton, List, ListItem, Card, Typography, Avatar, Divider, Box, Fab, useTheme, useMediaQuery, Fade, CssBaseline } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
@@ -75,6 +75,9 @@ function Chat() {
     }
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <>
       <CssBaseline />
@@ -114,13 +117,13 @@ function Chat() {
           <div ref={messagesEndRef} />
         </List>
         {showScrollButton && (
-          <IconButton
-            color="primary"
-            sx={{ position: 'fixed', right: 20, bottom: 20, zIndex: 1100 }}
-            onClick={scrollToBottom}
-          >
-            <ArrowDownwardIcon />
-          </IconButton>
+          <Fade in={showScrollButton}>
+            <Box sx={{ position: 'fixed', bottom: theme.spacing(8), right: isMobile ? theme.spacing(2) : theme.spacing(3) }}>
+              <Fab color="primary" size="small" onClick={scrollToBottom}>
+                <ArrowDownwardIcon />
+              </Fab>
+            </Box>
+          </Fade>
         )}
         <Box component="form" onSubmit={sendMessage} sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
           <Stack direction="row" alignItems="center" spacing={1}>
