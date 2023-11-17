@@ -75,6 +75,10 @@ function Chat() {
     }
   };
 
+  const isMessageFromCurrentUser = (msg) => {
+    return msg.uid === user.uid;
+  };
+
   const theme = useTheme();
 
   return (
@@ -94,13 +98,13 @@ function Chat() {
                 </Typography>
               </Divider>
               {group.messages.map((msg) => (
-                <ListItem key={msg.id} alignItems="flex-start" sx={{ mb: 2 }}>
-                  <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
+                <ListItem key={msg.id} alignItems="flex-start" sx={{ mb: 2, flexDirection: isMessageFromCurrentUser(msg) ? 'row-reverse' : 'row' }}>
+                  <Avatar sx={{ bgcolor: 'primary.main', mr: isMessageFromCurrentUser(msg) ? 0 : 2, ml: isMessageFromCurrentUser(msg) ? 2 : 0, order: isMessageFromCurrentUser(msg) ? -1 : 0 }}>
                     {msg.senderName.charAt(0)}
                   </Avatar>
                   <Card variant="outlined" sx={{ p: 2, flexGrow: 1 }}>
                     <Typography variant="subtitle2">
-                      {msg.senderName || 'Anonymous'}
+                        {isMessageFromCurrentUser(msg) ? 'Me' : msg.senderName}
                     </Typography>
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                       {format(msg.timestamp, 'p')}
