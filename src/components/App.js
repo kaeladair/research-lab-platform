@@ -5,9 +5,7 @@ import Chat from './Chat';
 function MyPage() {
   return (
     <PersistentDrawerLayout>
-      <div style={{ height: '100vh', overflow: 'hidden' }}>
-        <Chat />
-      </div>
+      <Chat />
       {/* More content can be added here */}
     </PersistentDrawerLayout>
   );
