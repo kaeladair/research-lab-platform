@@ -107,7 +107,7 @@ export default function PersistentDrawerLayout({ children }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {['Tasks', 'Chat', 'Docs', 'Lab Schedule'].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
