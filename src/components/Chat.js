@@ -87,7 +87,7 @@ function Chat() {
       <Stack
         direction="column"
         justifyContent="space-between"
-        sx={{ height: 'calc(100vh - 64px)', bgcolor: 'background.default', maxWidth: '100vw' }}
+        sx={{ height: 'calc(100dvh - 64px)', bgcolor: 'background.default', maxWidth: '100vw' }}
       >
         <List sx={{ overflowY: 'auto', flexGrow: 1, px: 2, py: 1 }} onScroll={handleScroll}>
           {messages.map((group, index) => (

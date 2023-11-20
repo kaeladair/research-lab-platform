@@ -83,6 +83,11 @@ export default function PersistentDrawerLayout({ children, onMenuItemClick }) {
     setOpen(false)
   }
 
+  const handleMenuItemClick = (text) => {
+    onMenuItemClick(text);
+    handleDrawerClose(); // Close the drawer when a menu item is clicked
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -125,7 +130,7 @@ export default function PersistentDrawerLayout({ children, onMenuItemClick }) {
         <List>
           {['Tasks', 'Chat', 'Docs', 'Lab Schedule'].map(text => (
             <ListItem key={text} disablePadding>
-              <ListItemButton onClick={() => onMenuItemClick(text)}>
+              <ListItemButton onClick={() => handleMenuItemClick(text)}>
                 <ListItemIcon>
                   {text === 'Tasks' && <ListAltIcon />}
                   {text === 'Chat' && <ChatIcon />}
