@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PersistentDrawerLayout from './PersistentDrawerLayout';
 import Chat from './Chat';
 import KanbanBoard from './KanbanBoard';
+import Documentation from './Documentation';
 
 function MyPage() {
   const [activeComponent, setActiveComponent] = useState('Tasks');
@@ -16,7 +17,8 @@ function MyPage() {
         return <KanbanBoard />;
       case 'Chat':
         return <Chat />;
-      // Add cases for other components like 'Docs', 'Lab Schedule'
+      case 'Docs':
+        return <Documentation />;
       default:
         return null;
     }
