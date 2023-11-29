@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -11,6 +11,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 
 function MyCalendar() {
   const [events, setEvents] = useState([]);
@@ -19,6 +21,17 @@ function MyCalendar() {
   const [daysOfWeek, setDaysOfWeek] = useState(new Array(7).fill(false));
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      const eventsCol = collection(db, 'events');
+      const eventSnapshot = await getDocs(eventsCol);
+      const eventList = eventSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      setEvents(eventList);
+    };
+
+    loadEvents();
+  }, []);
 
   const handleSelect = (info) => {
     setStartTime(info.startStr.split('T')[1].slice(0, 5)); // Extract start time
@@ -33,7 +46,7 @@ function MyCalendar() {
     setDaysOfWeek(updatedDaysOfWeek);
   };
 
-  const createEvent = () => {
+  const createEvent = async () => {
     const selectedDays = daysOfWeek
       .map((selected, index) => (selected ? index.toString() : null))
       .filter((day) => day !== null);
@@ -45,7 +58,8 @@ function MyCalendar() {
       endTime: endTime
     };
 
-    setEvents([...events, newEvent]);
+    const docRef = await addDoc(collection(db, 'events'), newEvent);
+    setEvents([...events, { ...newEvent, id: docRef.id }]);
     setOpen(false);
   };
 
@@ -82,7 +96,7 @@ function MyCalendar() {
           <div>
             {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day, index) => (
               <FormControlLabel
-                key={day}
+                key={index}
                 control={<Checkbox checked={daysOfWeek[index]} onChange={() => handleDayOfWeekChange(index)} />}
                 label={day}
               />
