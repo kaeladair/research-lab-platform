@@ -1,5 +1,6 @@
 import React from 'react'
 import { styled, useTheme } from '@mui/material/styles'
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -74,6 +75,8 @@ export default function PersistentDrawerLayout({ children, onMenuItemClick }) {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const user = useAuthentication()
+  const navigate = useNavigate(); // Adding the useNavigate hook
+
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -84,7 +87,23 @@ export default function PersistentDrawerLayout({ children, onMenuItemClick }) {
   }
 
   const handleMenuItemClick = (text) => {
-    onMenuItemClick(text);
+    // Update the URL based on the menu item clicked
+    switch(text) {
+      case 'Tasks':
+        navigate('/tasks');
+        break;
+      case 'Chat':
+        navigate('/chat');
+        break;
+      case 'Docs':
+        navigate('/docs');
+        break;
+      case 'Lab Schedule':
+        navigate('/schedule');
+        break;
+      default:
+        // Handle default case or error
+    }
     handleDrawerClose(); // Close the drawer when a menu item is clicked
   };
 
