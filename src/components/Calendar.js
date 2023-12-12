@@ -13,6 +13,9 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 
 function MyCalendar() {
   const [events, setEvents] = useState([]);
@@ -64,14 +67,15 @@ function MyCalendar() {
   };
 
   return (
-    <div>
+    <div style={{margin: '50px'}}>
       <FullCalendar
-        plugins={[timeGridPlugin, interactionPlugin]}
+        plugins={[timeGridPlugin, interactionPlugin, bootstrap5Plugin]}
         initialView="timeGridWeek"
         editable
         selectable
         events={events}
         select={handleSelect}
+        themeSystem={'bootstrap5'}
         headerToolbar={{
           start: "today prev next",
           end: "timeGridWeek",
