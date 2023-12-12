@@ -8,7 +8,8 @@ import {
   ListItemText,
   Typography,
   Grid,
-  Paper
+  Paper,
+  CircularProgress
 } from '@mui/material';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import Quill stylesheet
@@ -21,6 +22,7 @@ const DocumentEditor = () => {
   const [newDocTitle, setNewDocTitle] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
   const [summary, setSummary] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const openai = new OpenAI({
     apiKey: process.env.REACT_APP_OPENAI_API_KEY,
@@ -28,6 +30,7 @@ const DocumentEditor = () => {
   });
   
   const getSummary = async () => {
+    setIsLoading(true);
     const response = await openai.chat.completions.create({
       messages: [
         { role: "system", content: "You are a helpful assistant." },
@@ -37,6 +40,7 @@ const DocumentEditor = () => {
     });
   
     setSummary(response.choices[0].message.content);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -115,13 +119,18 @@ const DocumentEditor = () => {
                   {newDocTitle}
                 </Typography>
                 <div dangerouslySetInnerHTML={{ __html: editorContent }} />
-                <Button variant="contained" color="secondary" onClick={editDocument} sx={{ marginTop: 2 }}>
-                  Edit Doc
-                </Button>
-                <Button variant="contained" color="primary" onClick={() => getSummary()} sx={{ marginTop: 2, ml: 2 }}>
-                  Summarize Document
-                </Button>
-                {summary && <Typography variant="body1" sx={{ mt: 4 }}>{summary}</Typography>}
+                <Box display="flex" flexDirection="column" alignItems="left">
+                  <Box>
+                    <Button variant="contained" color="primary" onClick={handleEditorChange} sx={{mr: 1}}>
+                      Edit
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={getSummary}>
+                      Summarize
+                    </Button>
+                  </Box>
+                  {isLoading && <CircularProgress sx={{ mt: 3 }}/>}
+                  {summary && <Typography variant="body1" sx={{ mt: 2 }}>{summary}</Typography>}
+                </Box>
               </>
             )}
           </Paper>
@@ -132,3 +141,4 @@ const DocumentEditor = () => {
 };
 
 export default DocumentEditor;
+
