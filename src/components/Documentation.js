@@ -14,6 +14,8 @@ import {
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import Quill stylesheet
 import OpenAI from "openai";
+import { collection, getDocs, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebaseConfig'; // Import Firestore database
 
 const DocumentEditor = () => {
   const [documents, setDocuments] = useState({});
@@ -29,6 +31,18 @@ const DocumentEditor = () => {
     dangerouslyAllowBrowser: true
   });
   
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      const querySnapshot = await getDocs(collection(db, "documents"));
+      let fetchedDocs = {};
+      querySnapshot.forEach((doc) => {
+        fetchedDocs[doc.id] = { id: doc.id, ...doc.data() };
+      });
+      setDocuments(fetchedDocs);
+    };
+    fetchDocuments();
+  }, []);
+
   const getSummary = async () => {
     setIsLoading(true);
     const response = await openai.chat.completions.create({
@@ -43,40 +57,42 @@ const DocumentEditor = () => {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    const savedDocs = JSON.parse(localStorage.getItem('documents') || '{}');
-    setDocuments(savedDocs);
-  }, []);
-
   const handleEditorChange = (content) => {
     setEditorContent(content);
   };
 
-  const saveDocument = () => {
-    const newDocs = {
-      ...documents,
-      [currentDocId || new Date().toISOString()]: {
-        title: newDocTitle || `Document - ${new Date().toISOString()}`,
-        content: editorContent,
-      },
+  const saveDocument = async () => {
+    const newDoc = {
+      title: newDocTitle || `Document - ${new Date().toISOString()}`,
+      content: editorContent,
     };
-    setDocuments(newDocs);
-    localStorage.setItem('documents', JSON.stringify(newDocs));
   
-    // Keep the document in view mode after saving
-    if (!currentDocId) {
-      // If it's a new document, update the currentDocId
-      const newDocId = new Date().toISOString();
-      setCurrentDocId(newDocId);
+    let docId = currentDocId;
+  
+    if (currentDocId) {
+      const docRef = doc(db, "documents", currentDocId);
+      await updateDoc(docRef, newDoc);
+    } else {
+      const addedDocRef = await addDoc(collection(db, "documents"), newDoc);
+      docId = addedDocRef.id;
+      setCurrentDocId(docId);
     }
+  
+    setDocuments({ ...documents, [docId]: newDoc });
     setIsEditMode(false);
   };
+  
 
-  const openDocument = (docId) => {
-    setCurrentDocId(docId);
-    setEditorContent(documents[docId].content);
-    setNewDocTitle(documents[docId].title);
-    setIsEditMode(false);
+  const openDocument = async (docId) => {
+    const docRef = doc(db, "documents", docId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setCurrentDocId(docId);
+      setEditorContent(docSnap.data().content);
+      setNewDocTitle(docSnap.data().title);
+      setIsEditMode(false);
+    }
   };
 
   const editDocument = () => {
@@ -125,7 +141,7 @@ const DocumentEditor = () => {
                       Edit
                     </Button>
                     <Button variant="contained" color="primary" onClick={getSummary}>
-                      Summarize
+                      Summarize with GPT-3.5 Turbo
                     </Button>
                   </Box>
                   {isLoading && <CircularProgress sx={{ mt: 3 }}/>}
@@ -141,4 +157,3 @@ const DocumentEditor = () => {
 };
 
 export default DocumentEditor;
-
