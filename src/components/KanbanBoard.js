@@ -1,43 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Box, Paper, Typography, Modal, TextField, Button, List, ListItem, Checkbox, ListItemText } from '@mui/material';
+import { Box, Paper, Typography, Modal, TextField, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
+import { db } from '../firebaseConfig.js';
 
-// Initial data structure
-const initialColumns = {
-  'column-1': {
-    name: 'To do',
-    items: [
-      {
-        id: 'item-1',
-        content: 'Task 1',
-        description: 'Description for Task 1',
-        assignedTo: ['User 1'],
-        subtasks: [{ id: 'subtask-1', title: 'Subtask 1', completed: false }],
-        category: 'Development'
-      },
-      {
-        id: 'item-2',
-        content: 'Task 2',
-        description: 'Description for Task 2',
-        assignedTo: ['User 2'],
-        subtasks: [{ id: 'subtask-2', title: 'Subtask 2', completed: false }],
-        category: 'Design'
-      }
-    ],
-  },
-  'column-2': {
-    name: 'In Progress',
-    items: [],
-  },
-  'column-3': {
-    name: 'Done',
-    items: [],
-  },
-  // ... [add other columns if needed in the future]
-};
-
-// Styling for the modal
 const TaskModal = styled(Modal)({
   display: 'flex',
   alignItems: 'center',
@@ -54,11 +21,9 @@ const ModalContent = styled('div')(({ theme }) => ({
 const TaskModalContent = ({ task, onSave, onCancel }) => {
   const [editContent, setEditContent] = useState(task.content);
   const [editDescription, setEditDescription] = useState(task.description);
-  const [assignments, setAssignments] = useState(task.assignedTo);
-  const [subtasks, setSubtasks] = useState(task.subtasks);
 
   const handleSave = () => {
-    onSave({ ...task, content: editContent, description: editDescription, assignedTo: assignments, subtasks });
+    onSave({ ...task, content: editContent, description: editDescription});
   };
 
   return (
@@ -78,76 +43,123 @@ const TaskModalContent = ({ task, onSave, onCancel }) => {
         value={editDescription}
         onChange={(e) => setEditDescription(e.target.value)}
       />
-      <List>
-        {subtasks.map(subtask => (
-          <ListItem key={subtask.id}>
-            <Checkbox
-              checked={subtask.completed}
-              onChange={() => {
-                setSubtasks(subtasks.map(st => st.id === subtask.id ? { ...st, completed: !st.completed } : st));
-              }}
-            />
-            <ListItemText primary={subtask.title} />
-          </ListItem>
-        ))}
-      </List>
       <Button onClick={handleSave} variant="contained" color="primary" sx={{ mt: 2 }}>Save</Button>
       <Button onClick={onCancel} sx={{ ml: 2 }}>Cancel</Button>
     </ModalContent>
   );
 };
 
+const NewTaskForm = ({ onSave, onCancel }) => {
+  const [newContent, setNewContent] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+
+  const handleSave = () => {
+    onSave({ content: newContent, description: newDescription, columnId: 'column-1' });
+    setNewContent('');
+    setNewDescription('');
+  };
+
+  return (
+    <ModalContent>
+      <Typography variant="h6">Create New Task</Typography>
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Content"
+        value={newContent}
+        onChange={(e) => setNewContent(e.target.value)}
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Description"
+        value={newDescription}
+        onChange={(e) => setNewDescription(e.target.value)}
+      />
+      <Button onClick={handleSave} variant="contained" color="primary" sx={{ mt: 2 }}>Create</Button>
+      <Button onClick={onCancel} sx={{ ml: 2 }}>Cancel</Button>
+    </ModalContent>
+  );
+};
+
 const KanbanBoard = () => {
-  const [columns, setColumns] = useState(initialColumns);
+  const [columns, setColumns] = useState({
+    'column-1': { name: 'To Do', items: [] },
+    'column-2': { name: 'In Progress', items: [] },
+    'column-3': { name: 'Done', items: [] }
+  });
   const [selectedTask, setSelectedTask] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
 
-  const onDragEnd = (result) => {
-    const { source, destination } = result;
-    if (!destination) return;
-    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
-
-    const start = columns[source.droppableId];
-    const finish = columns[destination.droppableId];
-  
-    if (start === finish) {
-      const newItems = Array.from(start.items);
-      const [reorderedItem] = newItems.splice(source.index, 1);
-      newItems.splice(destination.index, 0, reorderedItem);
-  
-      const newColumn = {
-        ...start,
-        items: newItems,
-      };
-  
-      setColumns({
-        ...columns,
-        [source.droppableId]: newColumn,
-      });
-    } else {
-      const startItems = Array.from(start.items);
-      const [movedItem] = startItems.splice(source.index, 1);
-      const finishItems = Array.from(finish.items);
-      finishItems.splice(destination.index, 0, movedItem);
-  
-      const newStart = {
-        ...start,
-        items: startItems,
-      };
-  
-      const newFinish = {
-        ...finish,
-        items: finishItems,
-      };
-  
-      setColumns({
-        ...columns,
-        [source.droppableId]: newStart,
-        [destination.droppableId]: newFinish,
-      });
+  const fetchTasks = async () => {
+    try {
+        const querySnapshot = await getDocs(collection(db, "tasks"));
+        const newTasks = {
+            'column-1': { name: 'To Do', items: [] },
+            'column-2': { name: 'In Progress', items: [] },
+            'column-3': { name: 'Done', items: [] }
+        };
+        querySnapshot.forEach((doc) => {
+            const taskData = doc.data();
+            const columnId = taskData.columnId;
+            if (newTasks[columnId]) {
+                newTasks[columnId].items.push({ ...taskData, id: doc.id });
+            }
+        });
+        setColumns(newTasks);
+    } catch (error) {
+        console.error("Error fetching tasks: ", error);
     }
   };
 
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const addTaskToFirestore = async (newTask) => {
+    await addDoc(collection(db, "tasks"), newTask);
+    fetchTasks();
+  };
+
+  const updateTaskInFirestore = async (updatedTask) => {
+    const taskRef = doc(db, "tasks", updatedTask.id);
+    await updateDoc(taskRef, updatedTask);
+    fetchTasks();
+  };
+
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+  
+    if (!destination || (source.droppableId === destination.droppableId && source.index === destination.index)) {
+      return;
+    }
+  
+    const start = columns[source.droppableId];
+    const finish = columns[destination.droppableId];
+  
+    const startItems = Array.from(start.items);
+    const finishItems = finish === start ? startItems : Array.from(finish.items);
+    const [movedItem] = startItems.splice(source.index, 1);
+  
+    if (start === finish) {
+      startItems.splice(destination.index, 0, movedItem);
+    } else {
+      finishItems.splice(destination.index, 0, movedItem);
+    }
+  
+    const newColumns = {
+      ...columns,
+      [source.droppableId]: { ...start, items: startItems },
+      [destination.droppableId]: { ...finish, items: finishItems },
+    };
+  
+    setColumns(newColumns);
+  
+    // Firestore update
+    updateTaskInFirestore({ ...movedItem, columnId: destination.droppableId });
+  };
+  
   const handleTaskClick = (task) => {
     setSelectedTask(task);
     setIsModalOpen(true);
@@ -159,20 +171,21 @@ const KanbanBoard = () => {
   };
 
   const handleSaveTask = (updatedTask) => {
-    setColumns(prev => {
-      const newColumns = { ...prev };
-      for (const columnId in newColumns) {
-        newColumns[columnId].items = newColumns[columnId].items.map(item => 
-          item.id === updatedTask.id ? updatedTask : item
-        );
-      }
-      return newColumns;
-    });
+    if (updatedTask.id) {
+      updateTaskInFirestore(updatedTask);
+    } else {
+      addTaskToFirestore(updatedTask);
+    }
     handleCloseModal();
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
+
+      <Button variant="contained" color="primary" onClick={() => setIsNewTaskModalOpen(true)} sx={{ m: 3, mb: 0 }}>
+        Add New Task
+      </Button>
+
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 2, gap: 2, flexWrap: 'wrap' }}>
         {Object.entries(columns).map(([columnId, column]) => (
           <Box key={columnId} sx={{ width: 250, margin: 1, flex: '1 1 auto' }}>
@@ -211,7 +224,6 @@ const KanbanBoard = () => {
                           }}
                         >
                           <Typography variant="subtitle1">{item.content}</Typography>
-                          <Typography variant="caption">Category: {item.category}</Typography>
                         </Paper>
                       )}
                     </Draggable>
@@ -231,6 +243,12 @@ const KanbanBoard = () => {
             onSave={handleSaveTask}
             onCancel={handleCloseModal}
           />
+        </TaskModal>
+      )}
+
+      {isNewTaskModalOpen && (
+        <TaskModal open={isNewTaskModalOpen} onClose={() => setIsNewTaskModalOpen(false)}>
+          <NewTaskForm onSave={handleSaveTask} onCancel={() => setIsNewTaskModalOpen(false)} />
         </TaskModal>
       )}
     </DragDropContext>
