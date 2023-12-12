@@ -121,7 +121,7 @@ const DocumentEditor = () => {
                 <div dangerouslySetInnerHTML={{ __html: editorContent }} />
                 <Box display="flex" flexDirection="column" alignItems="left">
                   <Box>
-                    <Button variant="contained" color="primary" onClick={handleEditorChange} sx={{mr: 1}}>
+                    <Button variant="contained" color="primary" onClick={editDocument} sx={{mr: 1}}>
                       Edit
                     </Button>
                     <Button variant="contained" color="primary" onClick={getSummary}>
