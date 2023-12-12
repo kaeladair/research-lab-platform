@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import Quill stylesheet
+import OpenAI from "openai";
 
 const DocumentEditor = () => {
   const [documents, setDocuments] = useState({});
@@ -19,6 +20,24 @@ const DocumentEditor = () => {
   const [editorContent, setEditorContent] = useState('');
   const [newDocTitle, setNewDocTitle] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
+  const [summary, setSummary] = useState('');
+
+  const openai = new OpenAI({
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true
+  });
+  
+  const getSummary = async () => {
+    const response = await openai.chat.completions.create({
+      messages: [
+        { role: "system", content: "You are a helpful assistant." },
+        { role: "user", content: `Please summarize the following document: ${editorContent}` }
+      ],
+      model: "gpt-3.5-turbo",
+    });
+  
+    setSummary(response.choices[0].message.content);
+  };
 
   useEffect(() => {
     const savedDocs = JSON.parse(localStorage.getItem('documents') || '{}');
@@ -99,6 +118,10 @@ const DocumentEditor = () => {
                 <Button variant="contained" color="secondary" onClick={editDocument} sx={{ marginTop: 2 }}>
                   Edit Doc
                 </Button>
+                <Button variant="contained" color="primary" onClick={() => getSummary()} sx={{ marginTop: 2, ml: 2 }}>
+                  Summarize Document
+                </Button>
+                {summary && <Typography variant="body1" sx={{ mt: 4 }}>{summary}</Typography>}
               </>
             )}
           </Paper>
