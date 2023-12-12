@@ -22,9 +22,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ListAltIcon from '@mui/icons-material/ListAlt' // for Tasks
 import ChatIcon from '@mui/icons-material/Chat' // for Chat
 import DescriptionIcon from '@mui/icons-material/Description' // for Docs
-import ScheduleIcon from '@mui/icons-material/Schedule' // for Lab Schedule
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import MailIcon from '@mui/icons-material/Mail'
 import { SignIn, SignOut, useAuthentication } from '../services/authService' // Adjust the import path as needed
 
 const drawerWidth = 240
@@ -98,9 +95,6 @@ export default function PersistentDrawerLayout({ children, onMenuItemClick }) {
       case 'Docs':
         navigate('/docs');
         break;
-      case 'Lab Schedule':
-        navigate('/schedule');
-        break;
       default:
         // Handle default case or error
     }
@@ -147,14 +141,13 @@ export default function PersistentDrawerLayout({ children, onMenuItemClick }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Tasks', 'Chat', 'Docs', 'Lab Schedule'].map(text => (
+          {['Tasks', 'Chat', 'Docs'].map(text => (
             <ListItem key={text} disablePadding>
               <ListItemButton onClick={() => handleMenuItemClick(text)}>
                 <ListItemIcon>
                   {text === 'Tasks' && <ListAltIcon />}
                   {text === 'Chat' && <ChatIcon />}
                   {text === 'Docs' && <DescriptionIcon />}
-                  {text === 'Lab Schedule' && <ScheduleIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
