@@ -14,14 +14,14 @@ Our user audience consists of undergraduate research labs, specifically research
 
 ## App Demo
 **Kanban-style Tasks**
-![App Demo Screenshot 1](assets/Screenshot%202023-12-12%20at%207.04.53 PM.png)
+![App Demo Screenshot 1](assets/shot1.png)
 
-![App Demo Screenshot 2](assets/shot1.png)
-![App Demo Screenshot 3](assets/shot2.png)
-![App Demo Screenshot 4](assets/shot3.png)
-![App Demo Screenshot 5](assets/shot4.png)
-![App Demo Screenshot 6](assets/shot5.png)
-![App Demo Screenshot 7](assets/shot6.png)
+![App Demo Screenshot 2](assets/shot2.png)
+![App Demo Screenshot 3](assets/shot3.png)
+![App Demo Screenshot 4](assets/shot4.png)
+![App Demo Screenshot 5](assets/shot5.png)
+![App Demo Screenshot 6](assets/shot6.png)
+![App Demo Screenshot 7](assets/shot7.png)
 
 ## Technology Highlights
 - **APIs Used**: Firebase Firestore, Firebase Authentication, OpenAI API
