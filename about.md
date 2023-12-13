@@ -30,7 +30,7 @@ Our user audience consists of undergraduate research labs, specifically research
 ## Technology Highlights
 - **APIs Used**: OpenAI API
 - **Database Storage**: Tasks, messages, and documents are stored in Firestore.
-- **Challenges**: It was challenging to get the OpenAI API to work with the documentation component, but in the process I learned about environment variables and API best pratices.
+- **Challenges**: It was challenging to get the OpenAI API to work with the documentation component, but in the process I learned about environment variables and API best practices.
 
 ## Future Improvements
 - **Implement syntax highlighting and code blocks in documents**

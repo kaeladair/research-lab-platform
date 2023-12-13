@@ -1,81 +1,33 @@
-# Project Ideation Document
+# Ideation for final project
 
-## Project Overview
+## Audiences
+1. **Undergraduate Student Researchers**: Students seeking to manage research tasks efficiently and collaborate effectively.
+2. **Research Lab Coordinators**: Individuals responsible for overseeing lab operations and ensuring seamless collaboration.
+3. **Academic Institutions**: Universities and colleges focusing on enhancing research productivity and student engagement.
+4. **Lab Mentors and Advisors**: Professionals guiding undergraduate research, needing tools for effective communication and task tracking.
+5. **Research Funding Bodies**: Organizations interested in tracking the progress and effective management of funded research projects.
 
-### Title
-- Research Lab Management Web Application
+## Needs
+1. **Task Organization**: A tool for effectively organizing and prioritizing research tasks.
+2. **Real-time Collaboration**: Enabling team members to collaborate in real-time, regardless of location.
+3. **Document Management**: Efficient handling and storage of research documents.
+4. **Progress Tracking**: Tools to monitor and report on the progress of various research tasks and objectives.
+5. **Communication Platform**: A central platform for all communication related to the research project.
+6. **Resource Sharing**: Ability to share resources and research materials easily.
+7. **Integration with Academic Tools**: Compatibility with other academic and research tools commonly used in universities.
+8. **Data Security and Privacy**: Ensuring the confidentiality and security of research data.
+9. **User-friendly Interface**: An intuitive interface that is easy to navigate for students and faculty.
+10. **Customizable Features**: Allowing users to tailor the app according to their specific research needs.
 
-### Description
-- A web application tailored for computer science research labs to manage undergraduate researchers, their tasks, progress, and facilitate communication and documentation.
+## Potential Projects
+1. **Kanban Task Board**: A visual tool for managing research tasks, allowing users to see the status of different parts of the project at a glance.
+2. **Real-Time Chat Platform**: A chat system integrated into an app for instant communication among team members.
+3. **Document Creator with ChatGPT API**: A feature that allows users to create, edit, and summarize documents, enhanced by the integration of ChatGPT API for automated summaries and insights.
 
-## Key Features
+## Goals
+1. **Combining Task Management with Real-Time Collaboration**: Merging the kanban task board with a chat system.
+2. **Leveraging AI for Document Management**: Utilizing ChatGPT API for intelligent document handling.
+3. **User-Friendly Design**: Ensuring the app is easy to use and increases productivity.
 
-### 1. Project Management
-- **Functionality**: Allows research advisors to create, assign, and track tasks and projects for undergraduate researchers.
-- **Implementation**:
-  - React front-end for intuitive UI.
-  - Firebase Firestore for real-time data storage and retrieval of project details.
-  - Custom components for displaying projects and tasks with deadlines and progress indicators.
-
-### 2. Chat Feature
-- **Functionality**: Real-time chat for communication among lab members.
-- **Implementation**:
-  - React components for chat interface.
-  - Firebase Realtime Database for instant messaging capabilities.
-  - Authentication and user management with Firebase Authentication.
-
-### 3. Documentation
-- **Functionality**: Platform for creating, editing, and sharing project documentation and notes.
-- **Implementation**:
-  - Integration of a rich-text editor in React.
-  - Firebase Storage for document storage and management.
-  - Collaborative editing features (optional stretch goal).
-
-## Technical Stack
-
-### Front-End
-- **Framework**: React.js
-- **State Management**: React Context API or Redux (if needed for complex state management).
-- **Styling**: CSS Frameworks like Bootstrap or Material-UI.
-
-### Back-End
-- **Database**: Firebase Firestore
-- **Real-Time Data Handling**: Firebase Realtime Database
-- **Authentication**: Firebase Authentication
-- **File Storage**: Firebase Storage
-
-## Security Considerations
-- Implementation of robust authentication and authorization mechanisms using Firebase Authentication.
-- Ensuring data validation and security rules in Firebase Firestore and Realtime Database.
-
-## Scalability and Performance
-- Leveraging Firebase's scalability for handling growing data and user base.
-- Optimizing React components and Firebase queries for performance.
-
-## User Interface and Experience
-- Designing a clean and intuitive interface focusing on usability for both researchers and advisors.
-- Responsive design for accessibility across various devices.
-
-## Development Phases
-
-### Phase 1: Setup and Basic Functionality
-- Initial React app setup.
-- Basic Firebase integration.
-
-### Phase 2: Core Feature Development
-- Developing and integrating each key feature sequentially (Project Management, Chat, Documentation).
-
-### Phase 3: Testing and Refinement
-- Thorough testing of each feature.
-- Gathering feedback for UI/UX improvements.
-
-### Phase 4: Deployment and Feedback
-- Deploying the application.
-- Iterative improvements based on user feedback.
-
-## Future Enhancements
-- Advanced analytics for project progress.
-- Integration with external tools and APIs.
-
-## Conclusion
-- This document outlines the initial plan and vision for the Research Lab Management Web Application. It serves as a guide for the development process and will be updated as the project evolves.
+## Final Project Choice
+A research lab management portal that includes task management, chat, and documentation features.
