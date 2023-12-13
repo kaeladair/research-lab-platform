@@ -32,4 +32,9 @@ Our user audience consists of undergraduate research labs, specifically research
 - **Database Storage**: Tasks, messages, and documents are stored in Firestore.
 - **Challenges**: It was challenging to get the OpenAI API to work with the documentation component, but in the process I learned about environment variables and API best pratices.
 
+## Future Improvements
+- **Implement syntax highlighting and code blocks in documents**
+- **Add features to tasks including deadlines, subtasks, assigned users, etc**
+- **Add reactions and threads to messaging**
+
 👏🏼👏🏼👏🏼
