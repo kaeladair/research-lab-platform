@@ -141,7 +141,7 @@ const DocumentEditor = () => {
                       Edit
                     </Button>
                     <Button variant="contained" color="primary" onClick={getSummary}>
-                      Summarize with GPT-3.5 Turbo
+                      Summarize
                     </Button>
                   </Box>
                   {isLoading && <CircularProgress sx={{ mt: 3 }}/>}
